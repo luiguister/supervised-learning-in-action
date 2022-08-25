@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Reconocimiento de animales</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<form method="post" enctype="multipart/form-data" style="text-align: center;">
+    {% if file_animal_tuples is defined %}
+        <a href="/" title="Página Principal" id="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Cat/Dog Identifier" height="100">
+        </a>
+    {% else %}
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Cat/Dog Identifier">
+    {% endif %}
+    <input type="file" name="file" id="file" class="inputfile" />
+    <label for="file">Escoge un archivo</label>
+    <input type="submit" value="Analizar" name="action1" style="text-align: center;"/>
+    <input type="submit" value="Aleatoreo" name="action2" style="text-align: center;"/>
+</form>
+{% if file_animal_tuples is defined %}
+    {% if file_animal_tuples %}
+        <table style="margin: 0 auto;">
+            <tr>`
+                <th colspan="2">Model Results</th>
+            </tr>
+            {% for item in file_animal_tuples %}
+            <tr>
+                <td>
+                    {% if item[0].startswith('testdata') %}
+                        <img src="{{ url_for('static', filename=item[0]) }}" alt="uploaded image" width="300">
+                    {% else %}
+                        <img src="{{ url_for('download_file', filename=item[0]) }}" alt="uploaded image" width="300">
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item[1][0] == 'Dog' %}
+                        <img src="{{ url_for('static', filename='img/dog.png') }}" alt="it's a dog!" width="300">
+                        <p class="selection dog">It's a {{item[1][0]}}!</p>
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/cat.png') }}" alt="it's a cat!" width="300">
+                        <p class="selection cat">It's a {{item[1][0]}}!</p>
+                    {% endif %}
+                    <!--p class="confidence">Confidence: {{ item[1][1] }}</p-->
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endif %}
+</body>
+</html>
